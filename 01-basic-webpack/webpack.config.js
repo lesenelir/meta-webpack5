@@ -11,7 +11,7 @@ module.exports = {
     filename: 'static/js/main.js', // js输出文件名
     clean: true // 自动清除打包的文件 - webpack4 中的 cleanMyPlugin插件
   },
-  // 加载器
+  // 加载器（帮助webpack识别一些不能识别的模块）
   module: {
     // loader的配置
     rules: [
@@ -78,9 +78,16 @@ module.exports = {
     new HtmlWebpackPlugin({
       // 以 public/index.html 为模板创建文件
       // 新的html文件有两个特点：1. 内容和源文件一致 2. 自动引入打包生成的js等资源
-      template: path.resolve(__dirname, "src/public/index.html"),
+      template: path.resolve(__dirname, "public/index.html"),
     })
   ],
+  // 开发服务器 (npx webpack serve - 指令发生改变)
+  // 开发服务器是在内存中打包，不会输出资源（不会产生dist目录）
+  devServer: {
+    host: "localhost", // 启动服务器域名
+    port: "8080", // 启动服务器端口号
+    open: true, // 是否自动打开浏览器
+  },
   // 模式
   mode: "development"
 }
