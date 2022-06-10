@@ -1,7 +1,6 @@
 const path = require('path')
-const ESLintWebpackPlugin = require('eslint-webpack-plugin')
+const ESLintWebpackPlugin  = require('eslint-webpack-plugin')
 const HtmlWebpackPlugin = require("html-webpack-plugin")
-const CssMinimizerPlugin = require("css-minimizer-webpack-plugin")
 
 module.exports = {
   // 入口
@@ -19,74 +18,19 @@ module.exports = {
       // 处理css资源
       {
         test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader',
-          {
-            loader: "postcss-loader",
-            options: {
-              postcssOptions: {
-                plugins: [
-                  "postcss-preset-env", // 能解决大多数样式兼容性问题
-                ],
-              },
-            },
-          }
-        ]
+        use: ['style-loader', 'css-loader']
       },
       {
         test: /\.less$/,
-        use: [
-          'style-loader',
-          'css-loader',
-          {
-            loader: "postcss-loader",
-            options: {
-              postcssOptions: {
-                plugins: [
-                  "postcss-preset-env", // 能解决大多数样式兼容性问题
-                ],
-              },
-            },
-          },
-          'less-loader'
-        ]
+        use: ['style-loader', 'css-loader', 'less-loader']
       },
       {
         test: /\.s[ac]ss$/,
-        use: [
-          'style-loader',
-          'css-loader',
-          {
-            loader: "postcss-loader",
-            options: {
-              postcssOptions: {
-                plugins: [
-                  "postcss-preset-env", // 能解决大多数样式兼容性问题
-                ],
-              },
-            },
-          },
-          'sass-loader'
-        ]
+        use: ['style-loader', 'css-loader', 'sass-loader']
       },
       {
         test: /\.styl$/,
-        use: [
-          'style-loader',
-          'css-loader',
-          {
-            loader: "postcss-loader",
-            options: {
-              postcssOptions: {
-                plugins: [
-                  "postcss-preset-env", // 能解决大多数样式兼容性问题
-                ],
-              },
-            },
-          },
-          'stylus-loader'
-        ]
+        use: ['style-loader', 'css-loader', 'stylus-loader']
       },
       // 处理图片资源
       {
@@ -135,9 +79,7 @@ module.exports = {
       // 以 public/index.html 为模板创建文件
       // 新的html文件有两个特点：1. 内容和源文件一致 2. 自动引入打包生成的js等资源
       template: path.resolve(__dirname, "public/index.html"),
-    }),
-    // css 压缩
-    new CssMinimizerPlugin()
+    })
   ],
   // 开发服务器 (npx webpack serve - 指令发生改变)
   // 开发服务器是在内存中打包，不会输出资源（不会产生dist目录）
