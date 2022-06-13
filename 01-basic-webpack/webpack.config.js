@@ -4,6 +4,7 @@ const ESLintWebpackPlugin = require('eslint-webpack-plugin')
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin")
 const TerserPlugin = require("terser-webpack-plugin")
+const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin")
 
 const threads = os.cpus().length // 获取cpu核数
 
@@ -138,7 +139,9 @@ module.exports = {
                   // 开启babel缓存
                   cacheDirectory: true,
                   // 关闭缓存文件压缩
-                  cacheCompression: false
+                  cacheCompression: false,
+                  // 减少babel生成代码体积
+                  plugins: ["@babel/plugin-transform-runtime"],
                 }
               }
             ]
@@ -177,7 +180,35 @@ module.exports = {
       // 当生产模式会默认开启TerserPlugin，但是我们需要进行其他配置，就要重新写了
       new TerserPlugin({
         parallel: threads // 开启多进程
-      })
+      }),
+      // 压缩图片
+      new ImageMinimizerPlugin({
+        minimizer: {
+          implementation: ImageMinimizerPlugin.imageminGenerate,
+          options: {
+            plugins: [
+              ["gifsicle", { interlaced: true }],
+              ["jpegtran", { progressive: true }],
+              ["optipng", { optimizationLevel: 5 }],
+              [
+                "svgo",
+                {
+                  plugins: [
+                    "preset-default",
+                    "prefixIds",
+                    {
+                      name: "sortAttrs",
+                      params: {
+                        xmlnsOrder: "alphabetical",
+                      },
+                    },
+                  ],
+                },
+              ],
+            ],
+          },
+        },
+      }),
     ],
   },
   // 开发服务器 (npx webpack serve - 指令发生改变)
